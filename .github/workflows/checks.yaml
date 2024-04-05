@@ -20,7 +20,7 @@ on:
 
 jobs:
   analyze:
-    runs-on: ubunut-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
@@ -31,7 +31,7 @@ jobs:
 
 
   format:
-    runs-on: ubunut-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
@@ -40,7 +40,7 @@ jobs:
       - run: dart run dart_dev format --check
 
   dependency-validator:
-    runs-on: ubunut-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
@@ -73,7 +73,7 @@ jobs:
           echo "checks=$checks_json" >> $GITHUB_OUTPUT
 
   additional-checks:
-    runs-on: ubunut-latest
+    runs-on: ubuntu-latest
     needs: analyze-additional-checks
     strategy:
       fail-fast: false

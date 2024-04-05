@@ -1,0 +1,3 @@
+presets:
+  some_preset:
+    chain_stack_traces: true
