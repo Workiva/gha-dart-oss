@@ -42,7 +42,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       has-chrome-platform: ${{ steps.analyze.outputs.HAS_CHROME_PLATFORM }}
-      has-dart-dev: ${{ steps.analyze.outputs.HAS_CHROME_PLATFORM }}
     steps:
       - uses: actions/checkout@v4
       - name: Install yq
@@ -53,12 +52,6 @@ jobs:
       - working-directory: ${{ inputs.package-path }}
         id: analyze
         run: |
-          if (grep -q "^  dart_dev:" pubspec.yaml); then
-            echo "HAS_DART_DEV=true" >> $GITHUB_OUTPUT
-          else
-            echo "HAS_DART_DEV=false" >> $GITHUB_OUTPUT
-          fi
-
           if [[ -f 'dart_test.yaml' ]]; then
               platforms=$(yq '.platforms[], .presets.*.platforms[]' dart_test.yaml)
 
@@ -98,7 +91,6 @@ jobs:
         run: dart pub get
 
       - name: Run dart_dev unit tests
-        if: needs.pre.outputs.has-dart-dev == 'true'
         run: |
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
