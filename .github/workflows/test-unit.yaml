@@ -66,7 +66,7 @@ jobs:
   unit:
     runs-on: ubuntu-latest
     needs: pre
-    name: ${{ needs.pre.outputs.has-chrome-platform == 'true' && 'unit' }}${{ needs.pre.outputs.has-chrome-platform == 'true' && (matrix.release-mode && 'dev' || 'release') }}
+    name: ${{ needs.pre.outputs.has-chrome-platform == 'true' && 'unit' || '' }}${{ needs.pre.outputs.has-chrome-platform == 'false' && (matrix.release-mode && 'dev' || 'release') }}
     strategy:
       fail-fast: false
       matrix:
@@ -86,7 +86,7 @@ jobs:
         if: needs.pre.outputs.has-chrome-platform == 'true'
         run: |
           alias google-chrome="/opt/hostedtoolcache/chromium/stable/x64/chrome"
-          sudo ln -s /opt/hostedtoolcache/chromium/stable/x64/chrome /usr/bin/google-chrome
+          # sudo ln -s /opt/hostedtoolcache/chromium/stable/x64/chrome /usr/bin/google-chrome
 
       - name: Pub get
         working-directory: ${{ inputs.package-path }}
