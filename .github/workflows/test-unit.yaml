@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install yq
-        run: snap install yq --channel=v3/stable
+        run: sudo snap install yq --channel=v3/stable
       - working-directory: ${{ inputs.package-path }}
         id: analyze
         run: |
