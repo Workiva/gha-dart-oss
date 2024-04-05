@@ -2,6 +2,8 @@
 
 Workflows for use with Dart projects.
 
+The majority of workflows assume [dart_dev](https://github.com/Workiva/dart_dev) is installed and being used within the repo
+
 
 ## Basic Dart CI Setup
 ```yaml
