@@ -93,6 +93,7 @@ jobs:
         run: dart pub get
 
       - name: Run dart_dev unit tests
+        working-directory: ${{ inputs.package-path }}
         run: |
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
