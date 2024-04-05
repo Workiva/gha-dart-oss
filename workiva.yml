@@ -1,0 +1,9 @@
+# version: 2
+# meta:
+#   repo: gha-dart-oss
+#   tags:
+#     organization: Frameworks
+#     product_generation: nextgen
+#     service_name: gha-dart-oss
+#     taxonomy_component: gha-dart-oss
+#     team: Frontend Developer Experience
