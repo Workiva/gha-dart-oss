@@ -34,7 +34,7 @@ on:
 
       sdk:
         description: See https://github.com/Workiva/gha-dart/blob/master/setup-dart/README.md
-        default: workiva-stable
+        default: 2.19.6
         type: string
 
 jobs:
