@@ -55,10 +55,12 @@ jobs:
               platforms=$(yq '.platforms[], .presets.*.platforms[]' dart_test.yaml)
 
               if [[ "$platforms" == *"chrome"* ]]; then
+                echo "Project has chrome platform config"
                 echo "HAS_CHROME_PLATFORM=true" >> $GITHUB_OUTPUT
                 exit 0
               fi
           fi
+          echo "Project does not have chrome platform config"
           echo "HAS_CHROME_PLATFORM=false" >> $GITHUB_OUTPUT
 
   unit:
