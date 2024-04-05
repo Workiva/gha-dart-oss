@@ -81,12 +81,10 @@ jobs:
         if: needs.pre.outputs.has-chrome-platform == 'true'
         uses: browser-actions/setup-chrome@v1
         with:
-          chrome-version: 'stable'
-      - name: Setup Chrome Aliases
+          chrome-version: stable
+      - name: Setup Chrome Alias
         if: needs.pre.outputs.has-chrome-platform == 'true'
-        run: |
-          alias google-chrome="/opt/hostedtoolcache/chromium/stable/x64/chrome"
-          # sudo ln -s /opt/hostedtoolcache/chromium/stable/x64/chrome /usr/bin/google-chrome
+        run: alias google-chrome="/opt/hostedtoolcache/chromium/stable/x64/chrome"
 
       - name: Pub get
         working-directory: ${{ inputs.package-path }}
