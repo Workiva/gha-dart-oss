@@ -27,12 +27,8 @@ jobs:
         with:
           sdk: ${{ inputs.sdk }}
       - working-directory: ${{ inputs.package-path }}
-        run: |
-          if (grep -q "^  dart_dev:" pubspec.yaml); then
-            dart run dart_dev analyze
-          else
-            dart analyze .
-          fi
+        run: dart run dart_dev analyze
+
 
   format:
     runs-on: ubunut-latest
@@ -41,12 +37,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
-      - run: |
-          if (grep -q "^  dart_dev:" pubspec.yaml); then
-            dart run dart_dev format --check
-          else
-            dart format --output=none --set-exit-if-changed .
-          fi
+      - run: dart run dart_dev format --check
 
   dependency-validator:
     runs-on: ubunut-latest
