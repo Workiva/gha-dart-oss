@@ -1,0 +1,112 @@
+on:
+  workflow_call:
+    inputs:
+      package-path:
+        description: The path to the package to run analysis on
+        default: '.'
+        type: string
+
+      additional-checks:
+        description: >
+          Any commands to run along with the hardcoded defaults. Enter multiple
+          commands on different lines. Failure conditions are based on if any
+          provided command results in a non-zero exit code, OR modifies the source.
+        type: string
+
+      sdk:
+        description: See https://github.com/dart-lang/setup-dart
+        default: 2.19.6
+        type: string
+
+jobs:
+  analyze:
+    runs-on: ubunut-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+      - working-directory: ${{ inputs.package-path }}
+        run: |
+          if (grep -q "^  dart_dev:" pubspec.yaml); then
+            dart run dart_dev analyze
+          else
+            dart analyze .
+          fi
+
+  format:
+    runs-on: ubunut-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+      - run: |
+          if (grep -q "^  dart_dev:" pubspec.yaml); then
+            dart run dart_dev format --check
+          else
+            dart format --output=none --set-exit-if-changed .
+          fi
+
+  dependency-validator:
+    runs-on: ubunut-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+
+      - name: Install Dependency Validator
+        run: dart pub global activate dependency_validator ^3.2.3
+
+      - name: Install Package Dependencies
+        run: dart pub get
+
+      - name: Run Dependency Validator
+        working-directory: ${{ inputs.package-path }}
+        run: dart pub global run dependency_validator
+
+  analyze-additional-checks:
+    runs-on: [self-hosted, xs, al2023]
+    if: inputs.additional-checks != ''
+    outputs:
+      checks: ${{ steps.analyze.outputs.checks }}
+    steps:
+      - name: Analyze Checks
+        id: analyze
+        run: |
+          checks=$(cat <<-END
+          ${{ inputs.additional-checks }}
+          END)
+          checks_json=$(echo "$checks" | jq -R . | jq -scM .)
+          echo "checks=$checks_json" >> $GITHUB_OUTPUT
+
+  additional-checks:
+    runs-on: ubunut-latest
+    needs: analyze-additional-checks
+    strategy:
+      fail-fast: false
+      matrix:
+        check: ${{ fromJson(needs.analyze-additional-checks.outputs.checks) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+
+      - name: Install Package Dependencies
+        run: dart pub get
+
+      - name: Run '${{ matrix.check }}'
+        run: ${{ matrix.check }}
+        working-directory: ${{ inputs.package-path }}
+
+      - name: Check for source changes
+        run: |
+          git diff --quiet -- . ':(exclude)**pubspec.lock' || {
+            echo "::error::The '${{ matrix.check }}' failed with source changes"
+            git --no-pager diff -- . ':(exclude)**pubspec.lock'
+            exit 1
+          }
+
+
