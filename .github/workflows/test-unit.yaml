@@ -45,10 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install yq
-        run: |
-          apk add --update wget git curl make patch
-          wget https://github.com/mikefarah/yq/releases/download/v4.31.1/yq_linux_amd64 -O /usr/bin/yq
-          chmod +x /usr/bin/yq
+        run: snap install yq --channel=v3/stable
       - working-directory: ${{ inputs.package-path }}
         id: analyze
         run: |
