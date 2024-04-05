@@ -58,7 +58,7 @@ jobs:
         run: dart pub global run dependency_validator
 
   analyze-additional-checks:
-    runs-on: [self-hosted, xs, al2023]
+    runs-on: ubuntu-latest
     if: inputs.additional-checks != ''
     outputs:
       checks: ${{ steps.analyze.outputs.checks }}
