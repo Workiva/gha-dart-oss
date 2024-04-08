@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       package-path:
-        description: The path to the package to run analysis on
+        description: The path to the package to run checks on
         default: '.'
         type: string
 
