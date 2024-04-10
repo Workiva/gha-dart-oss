@@ -1,0 +1,22 @@
+name: 🧪 test-unit
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    paths:
+      - __tests__/fixtures/test-unit/**
+      - .github/workflows/test-unit.yaml
+      - .github/workflows/_test:test-unit.yaml
+
+jobs:
+  test-unit-without-chrome:
+    uses: ./.github/workflows/test-unit.yaml
+    with:
+      package-path: __tests__/fixtures/test-unit/without-chrome
+
+  test-unit-with-chrome:
+    uses: ./.github/workflows/test-unit.yaml
+    with:
+      package-path: __tests__/fixtures/test-unit/with-chrome

@@ -1,0 +1,8 @@
+name: unit_test
+publish_to: none
+environment:
+  sdk: '>=2.11.0 <3.0.0'
+
+dependencies:
+  test: ^1.21.1
+  dart_dev: ^4.0.2

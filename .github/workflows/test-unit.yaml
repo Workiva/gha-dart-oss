@@ -1,0 +1,113 @@
+on:
+  workflow_call:
+    inputs:
+      preset:
+        description: >
+          Any preset to specify when running dart test, see the 'test' packages
+          documentation on presets for more information.
+        type: string
+
+      browser-aggregation:
+        description: >
+          Whether or not to run the test with the --browser-aggregation flag. See test_html_builder's
+          readme for more information: https://github.com/Workiva/test_html_builder#aggregating-browser-tests
+        default: false
+        type: boolean
+
+      test-inputs:
+        description: Optional path(s) to a specific test file(s) passed to the dart test command
+        type: string
+
+      test-args:
+        description: Arguments passed directly to the dart test command
+        type: string
+
+      package-path:
+        description: A path to the package to run unit tests against
+        type: string
+        default: '.'
+
+      timeout:
+        description: A timeout, specificed in minutes, for the dart test command
+        default: 15
+        type: number
+
+      sdk:
+        description: See https://github.com/Workiva/gha-dart/blob/master/setup-dart/README.md
+        default: 2.19.6
+        type: string
+
+jobs:
+  pre:
+    runs-on: ubuntu-latest
+    outputs:
+      has-chrome-platform: ${{ steps.analyze.outputs.HAS_CHROME_PLATFORM }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install yq
+        run: |
+          sudo wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+      - working-directory: ${{ inputs.package-path }}
+        id: analyze
+        run: |
+          if [[ -f 'dart_test.yaml' ]]; then
+              platforms=$(yq '.platforms[], .presets.*.platforms[]' dart_test.yaml)
+
+              if [[ "$platforms" == *"chrome"* ]]; then
+                echo "Project has chrome platform config"
+                echo "HAS_CHROME_PLATFORM=true" >> $GITHUB_OUTPUT
+                exit 0
+              fi
+          fi
+          echo "Project does not have chrome platform config"
+          echo "HAS_CHROME_PLATFORM=false" >> $GITHUB_OUTPUT
+
+  unit:
+    runs-on: ubuntu-latest
+    needs: pre
+    name: ${{ matrix.release-mode && 'dev' || 'release' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        release-mode: ${{ fromJson(needs.pre.outputs.has-chrome-platform == 'true' && '[true, false]' || '[false]') }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+
+      - name: Setup Chrome
+        if: needs.pre.outputs.has-chrome-platform == 'true'
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Setup Chrome Alias
+        if: needs.pre.outputs.has-chrome-platform == 'true'
+        run: alias google-chrome="/opt/hostedtoolcache/chromium/stable/x64/chrome"
+
+      - name: Pub get
+        working-directory: ${{ inputs.package-path }}
+        run: dart pub get
+
+      - name: Run dart_dev unit tests
+        working-directory: ${{ inputs.package-path }}
+        run: |
+          args=()
+          if [[ "${{ matrix.release-mode }}" == "true" ]]; then
+            args+=(--release)
+          fi
+
+          if [[ "${{ inputs.browser-aggregation }}" == "true" ]]; then
+            args+=(--browser-aggregation)
+          fi
+
+          if [[ "${{ inputs.preset }}" != "" ]]; then
+            args+=(-P ${{ inputs.preset }})
+          fi
+
+          if [[ "${{ inputs.test-args }}" != "" ]]; then
+            args+=(--test-args="${{ inputs.test-args }}")
+          fi
+
+          timeout ${{ inputs.timeout }}m dart run dart_dev test "${args[@]}" ${{ inputs.test-inputs }}
