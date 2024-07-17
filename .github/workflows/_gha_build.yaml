@@ -21,7 +21,7 @@ jobs:
       # store artifacts action uploads a build.txt and marks the
       # github action run as "the build" for integration with
       # workiva release pipelines
-      - uses: Workiva/gha-store-artifacts@v2.0.1
+      - uses: Workiva/gha-store-artifacts@v2.0.4
   test:
     runs-on: [self-hosted, xs, al2023]
     steps:
