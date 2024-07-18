@@ -50,7 +50,7 @@ jobs:
           sdk: ${{ inputs.sdk }}
 
       - name: Install Dependency Validator
-        run: dart pub global activate dependency_validator ^3.2.3
+        run: dart pub global activate dependency_validator ^4.1.0
 
       - name: Install Package Dependencies
         working-directory: ${{ inputs.package-path }}
