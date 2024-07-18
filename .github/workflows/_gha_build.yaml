@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: [self-hosted, xs, al2023]
     steps:
-      - uses: Workiva/gha-setup-credentials@v2.0.2
+      - uses: Workiva/gha-setup-credentials@v2.0.5
       # Even though we aren't uploading a specific artifact, the
       # store artifacts action uploads a build.txt and marks the
       # github action run as "the build" for integration with
@@ -25,9 +25,9 @@ jobs:
   test:
     runs-on: [self-hosted, xs, al2023]
     steps:
-      - uses: Workiva/gha-setup-credentials@v2.0.2
+      - uses: Workiva/gha-setup-credentials@v2.0.5
       # Even though we have no test artifacts to actually upload
       # we need to run gha-upload-test-reports to satisfy the
       # auto QA pipeline rule
-      - uses: Workiva/gha-upload-test-reports@v2.0.2
+      - uses: Workiva/gha-upload-test-reports@v2.0.5
 
