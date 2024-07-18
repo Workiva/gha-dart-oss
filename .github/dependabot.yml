@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "pub"
+    directory: "/__tests__/fixtures/checks"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pub"
+    directory: "/__tests__/fixtures/test-unit/with-chrome"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pub"
+    directory: "/__tests__/fixtures/test-unit/without-chrome"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: "weekly"
+    groups:
+      all:
+        patterns: ["*"]
