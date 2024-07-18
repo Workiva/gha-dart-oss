@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: "pub"
+    directory: "/__tests__/fixtures/checks"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "pub"
+    directory: "/__tests__/fixtures/test-unit/with-chrome"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "pub"
+    directory: "/__tests__/fixtures/test-unit/without-chrome"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "github-actions"
+    schedule:
+      interval: "weekly"
+    commit-message:
+        prefix: "GHA"
+    labels:
+      - "GHA"
+      - "dependencies"
+    open-pull-requests-limit: 1
+    target-branch: "master"
+    groups:
+      gha-dependencies:
+        patterns:
+          - "workiva/gha-*"
+          - "actions/*"
+    directory: "/"
+    pull-request-branch-name:
+      separator: "/"
