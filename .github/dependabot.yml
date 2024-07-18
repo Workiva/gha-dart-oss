@@ -4,23 +4,14 @@ updates:
     directory: "/__tests__/fixtures/checks"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
   - package-ecosystem: "pub"
     directory: "/__tests__/fixtures/test-unit/with-chrome"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
   - package-ecosystem: "pub"
     directory: "/__tests__/fixtures/test-unit/without-chrome"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     schedule:
       interval: "weekly"
