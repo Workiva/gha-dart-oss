@@ -1,0 +1,23 @@
+
+name: 🏗️ SBOM
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - '**'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: [self-hosted, xs, al2023]
+    steps:
+      - uses: anchore/sbom-action@v0
+        with:
+          path: ./
+          format: cyclonedx-json
