@@ -45,11 +45,3 @@ jobs:
   publish:
     uses: Workiva/gha-dart-oss/.github/workflows/publish@v1.0.0
 ```
-
-```yaml
-name: Validate Publish
-
-on:
-  pull_request:
-
-```
