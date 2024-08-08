@@ -62,7 +62,7 @@ jobs:
   validate-publish:
     runs-on: ubuntu-latest
     # only run on release pull requests
-    if: ${{ startsWith(github.ref, 'refs/head/release') && github.event.sender == 'rmconsole-readonly-wk' }}
+    if: ${{ startsWith(github.ref, 'refs/head/release') && contains(github.event.sender, 'rmconsole') }}
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
