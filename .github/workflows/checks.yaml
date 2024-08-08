@@ -29,7 +29,6 @@ jobs:
       - working-directory: ${{ inputs.package-path }}
         run: dart run dart_dev analyze
 
-
   format:
     runs-on: ubuntu-latest
     steps:
@@ -59,6 +58,17 @@ jobs:
       - name: Run Dependency Validator
         working-directory: ${{ inputs.package-path }}
         run: dart pub global run dependency_validator
+
+  validate-publish:
+    runs-on: ubuntu-latest
+    # only run on release pull requests
+    if: ${{ startsWith(github.ref, 'refs/head/release') && contains(github.event.sender, 'rmconsole') }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+      - run: dart pub publish --dry-run
 
   analyze-additional-checks:
     runs-on: ubuntu-latest
