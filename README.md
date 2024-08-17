@@ -1,6 +1,6 @@
 # gha-dart-oss
 
-Workflows for use with [Workiva's](https://github.com/Workiva) OpenSource Dart projects.
+A set of opinionated github actions/workflows to use on OSS packages at [Workiva's](https://github.com/Workiva)
 
 The majority of workflows assume [dart_dev](https://github.com/Workiva/dart_dev) is installed and being used within the repo
 
@@ -25,6 +25,16 @@ jobs:
   # Runs unit tests in both d2js and ddc
   unit-tests:
     uses: Workiva/gha-dart-oss/.github/workflows/test-unit.yaml@v1.0.0
+
+  # for release PRs, ensures that once they merge, the publish action will work
+  validate-publish:
+    runs-on: ubuntu-latest
+    if: ${{ startsWith(github.ref, 'refs/heads/<your release branch prefix>/') }}
+    steps:
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 2.19.0
+      - run: dart pub publish --dry-run
 ```
 
 ```yaml
