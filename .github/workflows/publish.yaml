@@ -6,6 +6,11 @@ on:
         default: 2.19.6
         type: string
 
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
 jobs:
   create-sbom-release-asset:
     name: Create SBOM Release Asset
