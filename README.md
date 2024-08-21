@@ -22,6 +22,10 @@ jobs:
   checks:
     uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v1.0.0
 
+  # Generates sbom and uploads it using anchore/sbom-action
+  build:
+    uses: Workiva/gha-dart-oss/.github/workflows/build.yaml@v1.0.0
+
   # Runs unit tests in both d2js and ddc
   unit-tests:
     uses: Workiva/gha-dart-oss/.github/workflows/test-unit.yaml@v1.0.0

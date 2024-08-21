@@ -1,6 +1,11 @@
 on:
   workflow_call:
     inputs:
+      package-path:
+        description: The path to the package to publish
+        default: '.'
+        type: string
+
       sdk:
         description: See https://github.com/dart-lang/setup-dart
         default: 2.19.6
@@ -12,11 +17,16 @@ permissions:
   pull-requests: write
 
 jobs:
-  create-sbom-release-asset:
+  sbom:
     name: Create SBOM Release Asset
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+      - working-directory: ${{ inputs.package-path }}
+        run: dart pub get
       - name: Publish SBOM to Release Assets
         uses: anchore/sbom-action@v0
         with:

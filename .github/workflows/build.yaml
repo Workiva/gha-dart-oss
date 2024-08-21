@@ -1,0 +1,27 @@
+on:
+  workflow_call:
+    inputs:
+      package-path:
+        description: The path to the package to build
+        default: '.'
+        type: string
+
+      sdk:
+        description: See https://github.com/dart-lang/setup-dart
+        default: 2.19.6
+        type: string
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+      - working-directory: ${{ inputs.package-path }}
+        run: dart pub get
+      - uses: anchore/sbom-action@v0
+        with:
+          path: ${{ inputs.package-path}}
+          format: cyclonedx-json

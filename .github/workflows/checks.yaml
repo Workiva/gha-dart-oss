@@ -61,14 +61,21 @@ jobs:
 
   validate-publish:
     runs-on: ubuntu-latest
-    # only run on release pull requests
-    if: ${{ startsWith(github.ref, 'refs/head/release') && contains(github.event.sender, 'rmconsole') }}
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
-      - run: dart pub publish --dry-run
+      - id: analyze-pubspec
+        working-directory: ${{ inputs.package-path }}
+        run: |
+          echo "package_name=$(yq '.name' pubspec.yaml)" >> $GITHUB_OUTPUT
+          echo "package_version=$(yq '.version' pubspec.yaml)" >> $GITHUB_OUTPUT
+
+      - name: Validate Publish
+        # Only validate the publish for release pull requests, as determined by the branch name
+        if: github.ref == format('refs/head/release_{0}_{1}', steps.analyze-pubspec.outputs.package_name, steps.analyze-pubspec.outputs.package_version)
+        run: dart pub publish --dry-run
 
   analyze-additional-checks:
     runs-on: ubuntu-latest
