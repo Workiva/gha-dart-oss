@@ -44,10 +44,6 @@ jobs:
       has-chrome-platform: ${{ steps.analyze.outputs.HAS_CHROME_PLATFORM }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install yq
-        run: |
-          sudo wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod +x /usr/local/bin/yq
       - working-directory: ${{ inputs.package-path }}
         id: analyze
         run: |
