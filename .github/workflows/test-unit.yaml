@@ -86,8 +86,17 @@ jobs:
         working-directory: ${{ inputs.package-path }}
         run: dart pub get
 
+      - name: Analyze Pubspec
+        id: analyze-pubspec
+        working-directory: ${{ inputs.package-path }}
+        run: |
+          echo "has-dart-dev=$(grep -q "^  dart_dev:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
+          echo "has-build-runner=$(grep -q "^  build_runner:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
+          echo "has-build-test=$(grep -q "^  build_test:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
+
       - name: Run dart_dev unit tests
         working-directory: ${{ inputs.package-path }}
+        if: steps.analyze-pubspec.outputs.has-dart-dev == 'true'
         run: |
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
@@ -107,3 +116,52 @@ jobs:
           fi
 
           timeout ${{ inputs.timeout }}m dart run dart_dev test "${args[@]}" ${{ inputs.test-inputs }}
+
+      - name: Run build_runner tests
+        working-directory: ${{ inputs.package-path }}
+        if: steps.analyze-pubspec.outputs.has-dart-dev == 'false' && steps.analyze-pubspec.outputs.has-build-runner == 'true' && steps.analyze-pubspec.outputs.has-build-test == 'true'
+        run: |
+          args=()
+          if [[ "${{ matrix.release-mode }}" == "true" ]]; then
+            args+=(--release)
+          fi
+
+          if [[ "${{ inputs.browser-aggregation }}" == "true" ]]; then
+            echo "::error:: browser-aggregation is only supported when using dart_dev"
+            exit 1
+          fi
+
+          if [[ "${{ inputs.preset }}" != "" ]]; then
+            args+=(-P ${{ inputs.preset }})
+          fi
+
+          if [[ "${{ inputs.test-args }}" != "" ]]; then
+            args+=(-- "${{ inputs.test-args }}")
+          fi
+
+          timeout ${{ inputs.timeout }}m dart run build_runner test "${args[@]}" ${{ inputs.test-inputs }}
+
+      - name: Run dart tests
+        working-directory: ${{ inputs.package-path }}
+        if: steps.analyze-pubspec.outputs.has-dart-dev == 'false' && steps.analyze-pubspec.outputs.has-build-runner == 'false' && steps.analyze-pubspec.outputs.has-build-test == 'false'
+        run: |
+          args=()
+          if [[ "${{ matrix.release-mode }}" == "true" ]]; then
+            echo "::error:: release-mode is only supported with dart_dev or build_runner"
+            exit 1
+          fi
+
+          if [[ "${{ inputs.browser-aggregation }}" == "true" ]]; then
+            echo "::error:: browser-aggregation is only supported when using dart_dev"
+            exit 1
+          fi
+
+          if [[ "${{ inputs.preset }}" != "" ]]; then
+            args+=(--platform ${{ inputs.preset }})
+          fi
+
+          if [[ "${{ inputs.test-args }}" != "" ]]; then
+            args+=("${{ inputs.test-args }}")
+          fi
+
+          timeout ${{ inputs.timeout }}m dart test "${args[@]}" ${{ inputs.test-inputs }}
