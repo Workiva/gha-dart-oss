@@ -27,7 +27,12 @@ jobs:
         with:
           sdk: ${{ inputs.sdk }}
       - working-directory: ${{ inputs.package-path }}
-        run: dart run dart_dev analyze
+        run: |
+          if (grep -q "^  dart_dev:" pubspec.yaml); then
+            dart run dart_dev analyze
+          else
+            dart analyze .
+          fi
 
   format:
     runs-on: ubuntu-latest
@@ -38,7 +43,12 @@ jobs:
           sdk: ${{ inputs.sdk }}
       - name: Run format
         working-directory: ${{ inputs.package-path }}
-        run: dart run dart_dev format --check
+        run: |
+          if (grep -q "^  dart_dev:" pubspec.yaml); then
+            dart run dart_dev format --check
+          else
+            dart format --output=none --set-exit-if-changed .
+          fi
 
   dependency-validator:
     runs-on: ubuntu-latest
