@@ -87,16 +87,16 @@ jobs:
         run: dart pub get
 
       - name: Analyze Pubspec
-        id: analyze-pubspec
+        id: pubspec
         working-directory: ${{ inputs.package-path }}
         run: |
-          echo "has-dart-dev=$(grep -q "^  dart_dev:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
-          echo "has-build-runner=$(grep -q "^  build_runner:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
-          echo "has-build-test=$(grep -q "^  build_test:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
+          echo "dart-dev=$(grep -q "^  dart_dev:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
+          echo "build-runner=$(grep -q "^  build_runner:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
+          echo "build-test=$(grep -q "^  build_test:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
 
       - name: Run dart_dev unit tests
         working-directory: ${{ inputs.package-path }}
-        if: steps.analyze-pubspec.outputs.has-dart-dev == 'true'
+        if: steps.pubspec.outputs.dart-dev == 'true'
         run: |
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
@@ -119,7 +119,7 @@ jobs:
 
       - name: Run build_runner tests
         working-directory: ${{ inputs.package-path }}
-        if: steps.analyze-pubspec.outputs.has-dart-dev == 'false' && steps.analyze-pubspec.outputs.has-build-runner == 'true' && steps.analyze-pubspec.outputs.has-build-test == 'true'
+        if: steps.pubspec.outputs.dart-dev == 'false' && steps.pubspec.outputs.build-runner == 'true' && steps.pubspec.outputs.build-test == 'true'
         run: |
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
@@ -143,7 +143,7 @@ jobs:
 
       - name: Run dart tests
         working-directory: ${{ inputs.package-path }}
-        if: steps.analyze-pubspec.outputs.has-dart-dev == 'false' && steps.analyze-pubspec.outputs.has-build-runner == 'false' && steps.analyze-pubspec.outputs.has-build-test == 'false'
+        if: steps.pubspec.outputs.dart-dev == 'false' && steps.pubspec.outputs.build-runner == 'false' && steps.pubspec.outputs.build-test == 'false'
         run: |
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
