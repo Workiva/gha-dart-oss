@@ -12,6 +12,7 @@ on:
 
 jobs:
   test-unit:
+    name: ${{ matrix.fixture }}
     strategy:
       matrix:
         fixture: [with-chrome, without-chrome, dart-basic, dart-dev, build-runner]

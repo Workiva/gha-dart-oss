@@ -12,6 +12,7 @@ on:
 
 jobs:
   checks:
+    name: ${{ matrix.fixture }}
     strategy:
       matrix:
         fixture: [dart-dev, dart-basic]
