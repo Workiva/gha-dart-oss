@@ -17,4 +17,4 @@ jobs:
         fixture: [with-chrome, without-chrome, dart-basic, dart-dev, build-runner]
     uses: ./.github/workflows/test-unit.yaml
     with:
-      package-path: __tests/fixtures/test-unit/${{ matrix.fixture }}
+      package-path: __tests__/fixtures/test-unit/${{ matrix.fixture }}
