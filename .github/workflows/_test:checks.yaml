@@ -11,20 +11,19 @@ on:
       - .github/workflows/_test:checks.yaml
 
 jobs:
-  checks-with-dart-dev:
+  checks:
+    strategy:
+      matrix:
+        fixture: [dart-dev, dart-basic]
     uses: ./.github/workflows/checks.yaml
     with:
-      package-path: __tests__/fixtures/checks/with_dart_dev
+      package-path: __tests__/fixtures/checks/${{ matrix.fixture }}
 
-  checks-without-dart-dev:
-    uses: ./.github/workflows/checks.yaml
-    with:
-      package-path: __tests__/fixtures/checks/without_dart_dev
 
   checks-with-additional:
     uses: ./.github/workflows/checks.yaml
     with:
-      package-path: __tests__/fixtures/checks/with_dart_dev
+      package-path: __tests__/fixtures/checks/dart-dev
       additional-checks: |
         echo "all good!"
         dart format
