@@ -36,7 +36,8 @@ jobs:
       build-test: ${{ steps.analyze-pubspec.outputs.build-test }}
     steps:
       - uses: actions/checkout@v4
-      - working-directory: ${{ inputs.package-path }}
+      - name: Analyze dart_test.yaml
+        working-directory: ${{ inputs.package-path }}
         id: analyze-dart-test
         run: |
           if [[ -f 'dart_test.yaml' ]]; then
@@ -50,7 +51,8 @@ jobs:
           fi
           echo "Project does not have chrome platform config"
           echo "chrome-platform=false" >> $GITHUB_OUTPUT
-      - working-directory: ${{ inputs.package-path }}
+      - name: Analyze pubspec.yaml
+        working-directory: ${{ inputs.package-path }}
         id: analyze-pubspec
         run: |
           echo "dart-dev=$(grep -q "^  dart_dev:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_OUTPUT
