@@ -113,6 +113,7 @@ jobs:
             args+=(--test-args="${{ inputs.test-args }}")
           fi
 
+          echo "timeout ${{ inputs.timeout }}m dart run dart_dev test "${args[@]}""
           timeout ${{ inputs.timeout }}m dart run dart_dev test "${args[@]}"
 
       - name: Run tests with build_runner
@@ -132,6 +133,7 @@ jobs:
             args+=(-- "${{ inputs.test-args }}")
           fi
 
+          echo "timeout ${{ inputs.timeout }}m dart run build_runner test "${args[@]}""
           timeout ${{ inputs.timeout }}m dart run build_runner test "${args[@]}"
 
       - name: Run tests with dart test
@@ -152,4 +154,5 @@ jobs:
             args+=("${{ inputs.test-args }}")
           fi
 
+          echo "timeout ${{ inputs.timeout }}m dart test "${args[@]}""
           timeout ${{ inputs.timeout }}m dart test "${args[@]}"
