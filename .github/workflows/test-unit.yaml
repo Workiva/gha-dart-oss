@@ -57,6 +57,17 @@ jobs:
           echo "build-runner=$(grep -q "^  build_runner:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
           echo "build-test=$(grep -q "^  build_test:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
 
+  debug:
+    needs: pre
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print outputs
+        run: |
+          echo "chrome-platform: ${{ needs.pre.outputs.chrome-platform }}"
+          echo "dart-dev: ${{ needs.pre.outputs.dart-dev }}"
+          echo "build-runner: ${{ needs.pre.outputs.build-runner }}"
+          echo "build-test: ${{ needs.pre.outputs.build-test }}"
+
   unit:
     runs-on: ubuntu-latest
     needs: pre
