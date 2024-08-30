@@ -57,16 +57,12 @@ jobs:
           echo "build-runner=$(grep -q "^  build_runner:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_OUTPUT
           echo "build-test=$(grep -q "^  build_test:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_OUTPUT
 
-  debug:
-    needs: pre
-    runs-on: ubuntu-latest
-    steps:
       - name: Print outputs
         run: |
-          echo "chrome-platform: ${{ needs.pre.outputs.chrome-platform }}"
-          echo "dart-dev: ${{ needs.pre.outputs.dart-dev }}"
-          echo "build-runner: ${{ needs.pre.outputs.build-runner }}"
-          echo "build-test: ${{ needs.pre.outputs.build-test }}"
+          echo "chrome-platform: ${{ steps.analyze-dart-test.outputs.chrome-platform }}"
+          echo "dart-dev: ${{ steps.analyze-pubspec.outputs.dart-dev }}"
+          echo "build-runner: ${{ steps.analyze-pubspec.outputs.build-runner }}"
+          echo "build-test: ${{ steps.analyze-pubspec.outputs.build-test }}"
 
   unit:
     runs-on: ubuntu-latest
