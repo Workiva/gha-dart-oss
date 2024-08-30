@@ -53,9 +53,9 @@ jobs:
       - working-directory: ${{ inputs.package-path }}
         id: analyze-pubspec
         run: |
-          echo "dart-dev=$(grep -q "^  dart_dev:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
-          echo "build-runner=$(grep -q "^  build_runner:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
-          echo "build-test=$(grep -q "^  build_test:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_ENV
+          echo "dart-dev=$(grep -q "^  dart_dev:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_OUTPUT
+          echo "build-runner=$(grep -q "^  build_runner:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_OUTPUT
+          echo "build-test=$(grep -q "^  build_test:" pubspec.yaml && echo "true" || echo "false")" >> $GITHUB_OUTPUT
 
   debug:
     needs: pre
