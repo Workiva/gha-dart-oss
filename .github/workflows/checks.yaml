@@ -26,6 +26,10 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
+
+      - working-directory: ${{ inputs.package-path }}
+        run: dart pub get
+
       - working-directory: ${{ inputs.package-path }}
         run: |
           if (grep -q "^  dart_dev:" pubspec.yaml); then
