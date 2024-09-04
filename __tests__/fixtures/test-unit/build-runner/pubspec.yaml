@@ -5,4 +5,5 @@ environment:
 
 dependencies:
   test: ^1.21.1
-  dart_dev: ^4.0.2
+  build_runner: ^2.0.0
+  build_test: ^2.2.1

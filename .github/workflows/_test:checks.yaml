@@ -12,14 +12,19 @@ on:
 
 jobs:
   checks:
+    name: ${{ matrix.fixture }}
+    strategy:
+      matrix:
+        fixture: [dart-dev, dart-basic]
     uses: ./.github/workflows/checks.yaml
     with:
-      package-path: __tests__/fixtures/checks
+      package-path: __tests__/fixtures/checks/${{ matrix.fixture }}
+
 
   checks-with-additional:
     uses: ./.github/workflows/checks.yaml
     with:
-      package-path: __tests__/fixtures/checks
+      package-path: __tests__/fixtures/checks/dart-dev
       additional-checks: |
         echo "all good!"
         dart format
