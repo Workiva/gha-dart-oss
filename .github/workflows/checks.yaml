@@ -86,7 +86,7 @@ jobs:
           PACKAGE_NAME=$(yq '.name' pubspec.yaml)
           PACKAGE_VERSION=$(yq '.version' pubspec.yaml)
 
-          echo "release_ref=refs/head/release_$PACKAGE_NAME_$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+          echo "release_ref=release_${PACKAGE_NAME}_${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Debug
         run: |
