@@ -39,14 +39,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
+        id: setup-dart
         with:
           sdk: ${{ inputs.sdk }}
 
       - name: Install dependencies
         run: dart pub get
 
-      - name: Publish - dry run
-        run: dart pub publish --dry-run
+      # For dart 2, we have to force publish because `analyze --fatal-infos` is ran.
+      # This was fixed in dart 3, so we don't need to force publish for this version
+      - name: Publish (dart 2)
+        if: startsWith(steps.setup-dart.outputs.dart-version, '2')
+        run: dart pub publish --force
 
-      - name: Publish
-        run: dart pub publish -f
+      - name: Publish (dart 3)
+        if: startsWith(steps.setup-dart.outputs.dart-version, '3')
+        run: dart pub publish
