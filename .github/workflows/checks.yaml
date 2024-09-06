@@ -85,16 +85,17 @@ jobs:
         run: |
           PACKAGE_NAME=$(yq '.name' pubspec.yaml)
           PACKAGE_VERSION=$(yq '.version' pubspec.yaml)
+
           echo "release_ref=refs/head/release_$PACKAGE_NAME_$PACKAGE_VERSION" >> $GITHUB_OUTPUT
 
       - name: Debug
         run: |
-          echo "Current Ref: ${{ github.ref}}"
+          echo "Current Ref: ${{ github.head_ref }}"
           echo "Analyzed Release Ref: ${{ steps.analyze-pubspec.outputs.release_ref }}"
 
       - name: Validate Publish
         # Only validate the publish for release pull requests, as determined by the branch name
-        if: github.ref == steps.analyze-pubspec.outputs.release_ref
+        if: github.head_ref == steps.analyze-pubspec.outputs.release_ref
         run: dart pub publish --dry-run
 
   analyze-additional-checks:
