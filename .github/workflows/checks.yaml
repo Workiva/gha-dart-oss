@@ -78,17 +78,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
+        id: setup-dart
         with:
           sdk: ${{ inputs.sdk }}
       - id: analyze-pubspec
         working-directory: ${{ inputs.package-path }}
         run: |
-          echo "package_name=$(yq '.name' pubspec.yaml)" >> $GITHUB_OUTPUT
-          echo "package_version=$(yq '.version' pubspec.yaml)" >> $GITHUB_OUTPUT
+          PACKAGE_NAME=$(yq '.name' pubspec.yaml)
+          PACKAGE_VERSION=$(yq '.version' pubspec.yaml)
 
-      - name: Validate Publish
-        # Only validate the publish for release pull requests, as determined by the branch name
-        if: github.ref == format('refs/head/release_{0}_{1}', steps.analyze-pubspec.outputs.package_name, steps.analyze-pubspec.outputs.package_version)
+          echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+          echo "release_ref=release_${PACKAGE_NAME}_${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
+
+      # Only validate the publish for release pull requests, as determined by the branch name
+      - name: Debug
+        run: |
+          echo "Dart Version: ${{ steps.setup-dart.outputs.dart-version }}"
+          echo "Current Ref: ${{ github.head_ref }}"
+          echo "Analyzed Release Ref: ${{ steps.analyze-pubspec.outputs.release_ref }}"
+
+      # dart v2's `dart pub publish --dry-run` runs `dart analyze --fatal-infos`. This was updated in dart3
+      # (see: https://github.com/dart-lang/pub/pull/3877). Because "infos" are not a valid failure condition
+      # we need to emulate the behavior of `dart pub publish --dry-run` for dart v2.
+      - name: Validate Publish (dart v2)
+        if: startsWith(steps.setup-dart.outputs.dart-version, '2') && github.head_ref == steps.analyze-pubspec.outputs.release_ref
+        run: |
+          grep -q "## ${{ steps.analyze-pubspec.outputs.package_version }}" CHANGELOG.md || {
+            echo "::error::CHANGELOG.md does not contain a section for version $PACKAGE_VERSION"
+            exit 1
+          }
+      - name: Validate Publish (dart v3)
+        if: startsWith(steps.setup-dart.outputs.dart-version, '3') && github.head_ref == steps.analyze-pubspec.outputs.release_ref
         run: dart pub publish --dry-run
 
   analyze-additional-checks:
