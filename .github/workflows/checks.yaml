@@ -103,7 +103,7 @@ jobs:
       - name: Validate Publish (dart v2)
         if: startsWith(steps.setup-dart.outputs.dart-version, '2') && github.head_ref == steps.analyze-pubspec.outputs.release_ref
         run: |
-          grep -q "## ${{ steps.analyze-pubspec.outputs.package_version }}" CHANGELOG.md || {
+          grep -q "# ${{ steps.analyze-pubspec.outputs.package_version }}" CHANGELOG.md || {
             echo "::error::CHANGELOG.md does not contain a section for version $PACKAGE_VERSION"
             exit 1
           }
