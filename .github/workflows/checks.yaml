@@ -84,11 +84,10 @@ jobs:
       - id: analyze-pubspec
         working-directory: ${{ inputs.package-path }}
         run: |
-          PACKAGE_NAME=$(yq '.name' pubspec.yaml)
           PACKAGE_VERSION=$(yq '.version' pubspec.yaml)
 
           echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
-          echo "release_ref=release_${PACKAGE_NAME}_${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "release_ref=release_${{ github.event.repository.name }}_${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
 
       # Only validate the publish for release pull requests, as determined by the branch name
       - name: Debug
