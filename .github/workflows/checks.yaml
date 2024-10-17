@@ -13,6 +13,14 @@ on:
           provided command results in a non-zero exit code, OR modifies the source.
         type: string
 
+      format-check:
+        description: >
+          Whether or not to execute the format check. This is provided
+          as a separate input to allow for running this checks workflow
+          using different sdk versions, in a matrix.
+        default: true
+        type: boolean
+
       sdk:
         description: See https://github.com/dart-lang/setup-dart
         default: 2.19.6
@@ -40,6 +48,7 @@ jobs:
 
   format:
     runs-on: ubuntu-latest
+    if: ${{ inputs.format-check}}
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
