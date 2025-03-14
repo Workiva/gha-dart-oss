@@ -62,7 +62,7 @@ jobs:
           if (grep -q "^  dart_dev:" pubspec.yaml); then
             dart run dart_dev format --check
           else
-            dart format --output=none .
+            dart format .
           fi
 
           git --no-pager diff -- . ':(exclude)**pubspec.lock'
