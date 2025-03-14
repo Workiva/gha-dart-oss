@@ -57,6 +57,8 @@ jobs:
       - name: Run format
         working-directory: ${{ inputs.package-path }}
         run: |
+          dart format --version
+          
           if (grep -q "^  dart_dev:" pubspec.yaml); then
             dart run dart_dev format --check
           else
