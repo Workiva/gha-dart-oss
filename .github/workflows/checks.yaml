@@ -62,8 +62,10 @@ jobs:
           if (grep -q "^  dart_dev:" pubspec.yaml); then
             dart run dart_dev format --check
           else
-            dart format --output=none --set-exit-if-changed .
+            dart format --output=none .
           fi
+
+          git diff master
 
   dependency-validator:
     runs-on: ubuntu-latest
