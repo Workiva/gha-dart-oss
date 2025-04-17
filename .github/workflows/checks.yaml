@@ -82,6 +82,30 @@ jobs:
         working-directory: ${{ inputs.package-path }}
         run: dart pub global run dependency_validator
 
+  check-release-notes:
+    runs-on: ubuntu-latest
+    steps:      
+      - uses: actions/checkout@v4
+      - id: should-skip
+        run: |
+          LABELS=$(gh api --jq '.labels.[].name' /repos/{owner}/{repo}/pulls/${{ github.event.number }})
+          SKIP=$(echo "$LABELS" | grep -q "ignore release notes" && echo "true" || echo "false")
+          echo "skip=$SKIP" >> $GITHUB_OUTPUT
+
+      - if: ${{ steps.should-skip.outputs.skip == 'false' }}
+        uses: dorny/paths-filter@v2.11.1
+        id: has-changes
+        with:
+          working-directory: ${{ inputs.package-path }}
+          filters: |
+            changelog:
+              - 'CHANGELOG.md'
+      - if: ${{ steps.has-changes.outputs.changlog == 'false' }}
+        run: |
+          echo "::error::No changes to CHANGELOG.md detected."
+          echo "::error::Add a new entry to the 'Unreleased' section, or add an 'ignore release notes' label to this PR"
+          exit 1
+
   validate-publish:
     runs-on: ubuntu-latest
     steps:
