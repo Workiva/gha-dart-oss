@@ -32,6 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
+      - uses: Workiva/gha-setup-credentials@v2.0.9
         with:
           sdk: ${{ inputs.sdk }}
 
@@ -52,6 +53,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
+      - uses: Workiva/gha-setup-credentials@v2.0.9
         with:
           sdk: ${{ inputs.sdk }}
       - name: Run format
@@ -68,6 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
+      - uses: Workiva/gha-setup-credentials@v2.0.9
         with:
           sdk: ${{ inputs.sdk }}
 
@@ -87,6 +90,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
+      - uses: Workiva/gha-setup-credentials@v2.0.9
         id: setup-dart
         with:
           sdk: ${{ inputs.sdk }}
@@ -144,6 +148,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
+      - uses: Workiva/gha-setup-credentials@v2.0.9
         with:
           sdk: ${{ inputs.sdk }}
 
