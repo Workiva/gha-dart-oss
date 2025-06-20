@@ -105,12 +105,17 @@ jobs:
               pull_number: context.payload.pull_request.number
             });
 
-            const shouldSkip = pr.labels
+            const skipLabel = 'ignore release notes'
+            const includesSkipLabel = pr.labels
               .map(label => label.name.toLowerCase())
-              .includes('ignore release notes');
+              .includes(skipLabel);
 
-            console.log(`shouldSkip: ${shouldSkip}`);
-            core.setOutput('skip', `${shouldSkip}`);
+            if (includesSkipLabel) {
+              core.info(`PR contains skip label '${skipLabel}'. Skipping release notes check`)
+              core.setOutput('skip', 'true')
+            }
+
+            core.setOutput('skip', 'false')
 
       - if: ${{ steps.should-skip.outputs.skip == 'false' }}
         uses: dorny/paths-filter@v2.11.1
