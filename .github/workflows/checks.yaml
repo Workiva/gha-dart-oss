@@ -113,6 +113,7 @@ jobs:
             if (includesSkipLabel) {
               core.info(`PR contains skip label '${skipLabel}'. Skipping release notes check`)
               core.setOutput('skip', 'true')
+              return;
             }
 
             core.setOutput('skip', 'false')
