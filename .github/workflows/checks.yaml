@@ -84,15 +84,26 @@ jobs:
 
   check-release-notes:
     runs-on: ubuntu-latest
-    steps:      
+    steps:
       - uses: actions/checkout@v4
       - id: should-skip
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          LABELS=$(gh api --jq '.labels.[].name' /repos/{owner}/{repo}/pulls/${{ github.event.number }})
-          SKIP=$(echo "$LABELS" | grep -q "ignore release notes" && echo "true" || echo "false")
-          echo "skip=$SKIP" >> $GITHUB_OUTPUT
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request ? context.payload.pull_request.number : context.issue.number;
+            if (!prNumber) {
+              core.setOutput('skip', 'true');
+              return;
+            }
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            const shouldSkip = pr.labels
+              .map(label => label.name.toLowerCase())
+              .includes('ignore release notes');
+            core.setOutput('skip', `${shouldSkip}`);
 
       - if: ${{ steps.should-skip.outputs.skip == 'false' }}
         uses: dorny/paths-filter@v2.11.1
