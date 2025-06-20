@@ -84,21 +84,25 @@ jobs:
 
   check-release-notes:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
       - id: should-skip
         uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = context.payload.pull_request ? context.payload.pull_request.number : context.issue.number;
-            if (!prNumber) {
-              core.setOutput('skip', 'true');
+            const prAuthor = context.payload.pull_request.user.login;
+            const skippedAuthors = ['rmconsole-readonly-wk', /rmconsole\d?-(wf|wk)/,  'sourcegraph-wk'];
+            if (skippedAuthors.some((author) => prAuthor.match(author)) {
+              core.info(`PR author (${prAuthor}) is found in the list of skipped authors. Skipping release notes check`)
+              core.setOutput('skip', 'true')
               return;
             }
+
             const { data: pr } = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: prNumber
+              pull_number: context.payload.pull_request.number
             });
 
             const shouldSkip = pr.labels
