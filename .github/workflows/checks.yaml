@@ -100,9 +100,12 @@ jobs:
               repo: context.repo.repo,
               pull_number: prNumber
             });
+
             const shouldSkip = pr.labels
               .map(label => label.name.toLowerCase())
               .includes('ignore release notes');
+
+            console.log(`shouldSkip: ${shouldSkip}`);
             core.setOutput('skip', `${shouldSkip}`);
 
       - if: ${{ steps.should-skip.outputs.skip == 'false' }}
