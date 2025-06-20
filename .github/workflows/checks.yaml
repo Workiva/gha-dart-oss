@@ -116,6 +116,7 @@ jobs:
           filters: |
             changelog:
               - 'CHANGELOG.md'
+       # Note: if a changelog.md file doesn't exist in the repo this check will also be skipped
       - if: ${{ steps.has-changes.outputs.changlog == 'false' }}
         run: |
           echo "::error::No changes to CHANGELOG.md detected."
