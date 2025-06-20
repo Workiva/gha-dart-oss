@@ -93,7 +93,7 @@ jobs:
           script: |
             const prAuthor = context.payload.pull_request.user.login;
             const skippedAuthors = ['rmconsole-readonly-wk', /rmconsole\d?-(wf|wk)/,  'sourcegraph-wk'];
-            if (skippedAuthors.some((author) => prAuthor.match(author)) {
+            if (skippedAuthors.some((author) => prAuthor.match(author))) {
               core.info(`PR author (${prAuthor}) is found in the list of skipped authors. Skipping release notes check`)
               core.setOutput('skip', 'true')
               return;
