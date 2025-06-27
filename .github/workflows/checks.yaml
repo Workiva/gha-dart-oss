@@ -132,9 +132,7 @@ jobs:
           filters: |
             changelog:
               - 'CHANGELOG.md'
-
-      - run: |
-          echo "${{ toJson(steps.has-changes.outputs) }}"
+              
        # Note: if a changelog.md file doesn't exist in the repo this check will also be skipped
       - if: ${{ steps.has-changes.outputs.changelog == 'false' }}
         run: |
