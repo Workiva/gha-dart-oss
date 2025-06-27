@@ -136,7 +136,7 @@ jobs:
       - run: |
           echo "${{ toJson(steps.has-changes.outputs) }}"
        # Note: if a changelog.md file doesn't exist in the repo this check will also be skipped
-      - if: ${{ steps.has-changes.outputs.changlog == 'false' }}
+      - if: ${{ steps.has-changes.outputs.changelog == 'false' }}
         run: |
           echo "::error::No changes to CHANGELOG.md detected."
           echo "::error::Add a new entry to the 'Unreleased' section, or add an 'ignore release notes' label to this PR"
