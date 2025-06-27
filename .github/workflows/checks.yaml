@@ -97,7 +97,7 @@ jobs:
               /rmconsole\d?-(wf|wk)/,  
               'sourcegraph-wk', 
               'wk-gh-actions-wk',
-              'dependabot[bot]',
+              /dependabot\[bot\]/,
             ];
             if (skippedAuthors.some((author) => prAuthor.match(author))) {
               core.info(`PR author (${prAuthor}) is found in the list of skipped authors. Skipping release notes check`)
