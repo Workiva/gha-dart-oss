@@ -92,7 +92,13 @@ jobs:
         with:
           script: |
             const prAuthor = context.payload.pull_request.user.login;
-            const skippedAuthors = ['rmconsole-readonly-wk', /rmconsole\d?-(wf|wk)/,  'sourcegraph-wk', 'wk-gh-actions-wk'];
+            const skippedAuthors = [
+              'rmconsole-readonly-wk', 
+              /rmconsole\d?-(wf|wk)/,  
+              'sourcegraph-wk', 
+              'wk-gh-actions-wk',
+              'dependabot[bot]',
+            ];
             if (skippedAuthors.some((author) => prAuthor.match(author))) {
               core.info(`PR author (${prAuthor}) is found in the list of skipped authors. Skipping release notes check`)
               core.setOutput('skip', 'true')
@@ -126,8 +132,9 @@ jobs:
           filters: |
             changelog:
               - 'CHANGELOG.md'
+              
        # Note: if a changelog.md file doesn't exist in the repo this check will also be skipped
-      - if: ${{ steps.has-changes.outputs.changlog == 'false' }}
+      - if: ${{ steps.has-changes.outputs.changelog == 'false' }}
         run: |
           echo "::error::No changes to CHANGELOG.md detected."
           echo "::error::Add a new entry to the 'Unreleased' section, or add an 'ignore release notes' label to this PR"
