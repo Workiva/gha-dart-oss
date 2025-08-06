@@ -164,5 +164,9 @@ jobs:
         check: ${{ fromJson(needs.analyze-additional-checks.outputs.checks) }}
     steps:
       - uses: Workiva/gha-dart-oss/.github/actions/additional-checks@builtin_checks
+        with:
+          package-path: ${{ inputs.package-path }}
+          command: ${{ matrix.check }}
+          sdk: ${{ inputs.sdk }}
 
 
