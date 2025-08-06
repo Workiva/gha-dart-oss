@@ -1,0 +1,48 @@
+name: Additional Checks
+
+description: >
+  Executes a command for .github/workflows/checks.yaml's additional-checks with
+  support for builtin aliases and scripts
+
+inputs:
+  package-path:
+    description: The path to the package to run checks on
+
+  command:
+    description: The command to execute
+
+  sdk:
+    description: See https://github.com/dart-lang/setup-dart
+    default: 2.19.6
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+    - uses: dart-lang/setup-dart@v1
+      with:
+        sdk: ${{ inputs.sdk }}
+
+    - name: Install Package Dependencies
+      shell: bash
+      working-directory: ${{ inputs.package-path }}
+      run: dart pub get
+
+    - name: Run '${{ inputs.command }}'
+      shell: bash
+      working-directory: ${{ inputs.package-path }}
+      run: |
+        shopt -s expand_aliases # Expand aliases: https://github.com/actions/toolkit/issues/766
+        alias ddev="dart run dart_dev"
+        alias no_entrypoint_imports="$GITHUB_ACTION_PATH/builtins/no_entrypoint_imports.sh"
+
+        ${{ inputs.command }}
+
+    - name: Check for source changes
+      shell: bash
+      run: |
+        git diff --quiet -- . ':(exclude)**pubspec.lock' || {
+          echo "::error::The '${{ inputs.command }}' failed with source changes"
+          git --no-pager diff -- . ':(exclude)**pubspec.lock'
+          exit 1
+        }
