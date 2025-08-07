@@ -163,25 +163,10 @@ jobs:
       matrix:
         check: ${{ fromJson(needs.analyze-additional-checks.outputs.checks) }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@v1
+      - uses: Workiva/gha-dart-oss/.github/actions/additional-checks@v0.1.10
         with:
+          package-path: ${{ inputs.package-path }}
+          command: ${{ matrix.check }}
           sdk: ${{ inputs.sdk }}
-
-      - name: Install Package Dependencies
-        working-directory: ${{ inputs.package-path }}
-        run: dart pub get
-
-      - name: Run '${{ matrix.check }}'
-        run: ${{ matrix.check }}
-        working-directory: ${{ inputs.package-path }}
-
-      - name: Check for source changes
-        run: |
-          git diff --quiet -- . ':(exclude)**pubspec.lock' || {
-            echo "::error::The '${{ matrix.check }}' failed with source changes"
-            git --no-pager diff -- . ':(exclude)**pubspec.lock'
-            exit 1
-          }
 
 
