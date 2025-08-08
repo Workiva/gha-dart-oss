@@ -1,0 +1,36 @@
+name: 🧪 additional-checks
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    paths:
+      - .github/workflows/_test:additional-checks.yaml
+      - .github/actions/additional-checks/**
+      - __tests__/fixtures/additional-checks*
+
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  ddev-alias:
+    runs-on: small-al2023
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/additional-checks
+        with:
+          package-path: ./__tests__/fixtures/additional-checks
+          command: ddev --help
+
+  no_entrypoint_imports:
+    runs-on: small-al2023
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/additional-checks
+        with:
+          package-path: ./__tests__/fixtures/additional-checks
+          command: no_entrypoint_imports
+
