@@ -26,7 +26,7 @@ jobs:
           command: ddev --help
 
   no_entrypoint_imports:
-    runs-on: small-al2023
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/additional-checks
