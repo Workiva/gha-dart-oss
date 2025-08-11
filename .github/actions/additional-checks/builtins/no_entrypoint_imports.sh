@@ -2,7 +2,7 @@
 
 PACKAGE_NAME=$(yq '.name' pubspec.yaml)
 
-results=$(find ./lib/src -name "*.dart" -exec grep -l "^import ['\"]package:$PACKAGE_NAME/[^/]*\.dart" {} +)
+results=$(find ./lib/src -name "*.dart" -exec grep -l "^import ['\"]package:$PACKAGE_NAME/[^/]*.dart" {} +)
 
 if [[ "$results" != "" ]]; then
     echo
