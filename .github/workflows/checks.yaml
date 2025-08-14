@@ -163,7 +163,7 @@ jobs:
       matrix:
         check: ${{ fromJson(needs.analyze-additional-checks.outputs.checks) }}
     steps:
-      - uses: Workiva/gha-dart-oss/.github/actions/additional-checks@v0.1.11
+      - uses: Workiva/gha-dart-oss/.github/actions/additional-checks@v0.1.12
         with:
           package-path: ${{ inputs.package-path }}
           command: ${{ matrix.check }}
