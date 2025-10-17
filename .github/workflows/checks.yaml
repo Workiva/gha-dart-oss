@@ -54,6 +54,11 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
+      
+      # run pub get to resolve `analysis_options.yaml` dependencies (like 'workiva_analysis_options')
+      # which might make configuration setting modifying format results
+      - run: dart pub get
+      
       - name: Run format
         working-directory: ${{ inputs.package-path }}
         run: |
