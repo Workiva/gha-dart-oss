@@ -20,16 +20,16 @@ on:
 jobs:
   # Runs analysis, formatting, and dependency validation, against the dart source
   checks:
-    uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.12
+    uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.13
 
   # Generates sbom and uploads it using anchore/sbom-action
   build:
-    uses: Workiva/gha-dart-oss/.github/workflows/build.yaml@v0.1.12
+    uses: Workiva/gha-dart-oss/.github/workflows/build.yaml@v0.1.13
 
   # Runs unit tests in dev mode (vm/ddc), and optionally `--release` if executing
   # against a webdev configured repo
   unit-tests:
-    uses: Workiva/gha-dart-oss/.github/workflows/test-unit.yaml@v0.1.12
+    uses: Workiva/gha-dart-oss/.github/workflows/test-unit.yaml@v0.1.13
 ```
 
 ```yaml
@@ -48,5 +48,5 @@ permissions:
 jobs:
   # Generates and uploads sbom, and publishes to pub.dev
   publish:
-    uses: Workiva/gha-dart-oss/.github/workflows/publish@v0.1.12
+    uses: Workiva/gha-dart-oss/.github/workflows/publish@v0.1.13
 ```
