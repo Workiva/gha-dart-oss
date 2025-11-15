@@ -1,3 +1,9 @@
+[![Slack Channel](https://img.shields.io/badge/Support_Channel-Slack-purple)](https://slack.com/app_redirect?channel=support-frontend-dx)
+[![Maintainer](https://img.shields.io/badge/maintainer-FEDX-silver)](https://wiki.atl.workiva.net/display/FEF/Frontend+Dev+Experience)
+[![Documentation](https://img.shields.io/badge/Additional_Documentation-blue)](https://frontend.workiva.dev)
+[![CI](https://github.com/Workiva/gha-dart-oss/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/Workiva/gha-dart-oss/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/Workiva/gha-dart-oss/branch/master/graph/badge.svg?token=7S7VXS0TSJ)](https://codecov.io/gh/Workiva/gha-dart-oss)
+
 # gha-dart-oss
 
 Workflows for use with [Workiva's](https://github.com/Workiva) OpenSource Dart projects.
