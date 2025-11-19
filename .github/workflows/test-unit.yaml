@@ -35,7 +35,7 @@ jobs:
       build-runner: ${{ steps.analyze-pubspec.outputs.build-runner }}
       build-test: ${{ steps.analyze-pubspec.outputs.build-test }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Analyze dart_test.yaml
         working-directory: ${{ inputs.package-path }}
         id: analyze-dart-test
@@ -75,14 +75,14 @@ jobs:
       matrix:
         release-mode: ${{ fromJson(needs.pre.outputs.chrome-platform == 'true' && '[true, false]' || '[false]') }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
 
       - name: Setup Chrome
         if: needs.pre.outputs.chrome-platform == 'true'
-        uses: browser-actions/setup-chrome@v1
+        uses: browser-actions/setup-chrome@v2
         with:
           chrome-version: stable
 
