@@ -30,7 +30,7 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.format-check}}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
@@ -72,7 +72,7 @@ jobs:
   dependency-validator:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
@@ -92,9 +92,9 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: should-skip
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const prAuthor = context.payload.pull_request.user.login;
@@ -131,7 +131,7 @@ jobs:
             core.setOutput('skip', 'false')
 
       - if: ${{ steps.should-skip.outputs.skip == 'false' }}
-        uses: dorny/paths-filter@v2.11.1
+        uses: dorny/paths-filter@v3.0.2
         id: has-changes
         with:
           working-directory: ${{ inputs.package-path }}
