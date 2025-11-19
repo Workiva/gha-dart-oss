@@ -134,10 +134,11 @@ jobs:
         uses: dorny/paths-filter@v3.0.2
         id: has-changes
         with:
-          working-directory: ${{ inputs.package-path }}
+          # the 'working-directory' input has a bug (https://github.com/dorny/paths-filter/issues/221). 
+          # We can't use it to make filters relative `working-directory: ${{ inputs.package-path }}`
           filters: |
             changelog:
-              - 'CHANGELOG.md'
+              - '${{inputs.package-path}}/CHANGELOG.md'
               
        # Note: if a changelog.md file doesn't exist in the repo this check will also be skipped
       - if: ${{ steps.has-changes.outputs.changelog == 'false' }}
