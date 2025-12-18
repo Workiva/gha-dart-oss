@@ -30,7 +30,7 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.format-check}}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
@@ -72,7 +72,7 @@ jobs:
   dependency-validator:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ inputs.sdk }}
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - id: should-skip
         uses: actions/github-script@v8
         with:
