@@ -1,14 +1,7 @@
 name: 🧪 build
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    paths:
-      - __tests__/fixtures/build/**
-      - .github/workflows/build.yaml
-      - .github/workflows/_test:build.yaml
+  workflow_call:
 
 jobs:
   build:

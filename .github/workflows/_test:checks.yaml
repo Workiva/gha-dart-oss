@@ -1,14 +1,7 @@
 name: 🧪 checks
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    paths:
-      - __tests__/fixtures/checks/**
-      - .github/workflows/checks.yaml
-      - .github/workflows/_test:checks.yaml
+  workflow_call:
 
 jobs:
   checks:

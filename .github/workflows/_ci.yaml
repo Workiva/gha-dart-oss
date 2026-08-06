@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - '**'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: anchore/sbom-action@v0
+        with:
+          path: ./
+          format: cyclonedx-json
+
+  test-additional-checks:
+    name: "🧪 additional-checks"
+    uses: ./.github/workflows/_test:additional-checks.yaml
+    secrets: inherit
+
+  test-build:
+    name: "🧪 build"
+    uses: ./.github/workflows/_test:build.yaml
+    secrets: inherit
+
+  test-checks:
+    name: "🧪 checks"
+    uses: ./.github/workflows/_test:checks.yaml
+    secrets: inherit
+
+  test-test-unit:
+    name: "🧪 test-unit"
+    uses: ./.github/workflows/_test:test-unit.yaml
+    secrets: inherit
+
+  complete-build:
+    needs:
+      - test-additional-checks
+      - test-build
+      - test-checks
+      - test-test-unit
+    runs-on: xs-al2023
+    steps:
+      - uses: Workiva/gha-setup-credentials@v2.1.17
+      - uses: Workiva/gha-build-complete@v1.0.7

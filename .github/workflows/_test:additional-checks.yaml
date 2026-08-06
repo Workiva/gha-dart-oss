@@ -1,15 +1,7 @@
 name: 🧪 additional-checks
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    paths:
-      - .github/workflows/_test:additional-checks.yaml
-      - .github/actions/additional-checks/**
-      - __tests__/fixtures/additional-checks*
-
+  workflow_call:
 
 permissions:
   contents: read
