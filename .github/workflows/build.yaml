@@ -15,13 +15,13 @@ jobs:
   sbom:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v6.1.0
+      - uses: dart-lang/setup-dart@v1.8.1
         with:
           sdk: ${{ inputs.sdk }}
       - working-directory: ${{ inputs.package-path }}
         run: dart pub get
-      - uses: anchore/sbom-action@v0
+      - uses: anchore/sbom-action@v0.24.0
         with:
           path: ${{ inputs.package-path}}
           format: cyclonedx-json

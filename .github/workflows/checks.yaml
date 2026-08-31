@@ -30,8 +30,8 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v6.1.0
+      - uses: dart-lang/setup-dart@v1.8.1
         with:
           sdk: ${{ inputs.sdk }}
 
@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.format-check}}
     steps:
-      - uses: actions/checkout@v6
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v6.1.0
+      - uses: dart-lang/setup-dart@v1.8.1
         with:
           sdk: ${{ inputs.sdk }}
       
@@ -72,8 +72,8 @@ jobs:
   dependency-validator:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v6.1.0
+      - uses: dart-lang/setup-dart@v1.8.1
         with:
           sdk: ${{ inputs.sdk }}
 
@@ -92,9 +92,9 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.1.0
       - id: should-skip
-        uses: actions/github-script@v8
+        uses: actions/github-script@v8.0.0
         with:
           script: |
             const prAuthor = context.payload.pull_request.user.login;
