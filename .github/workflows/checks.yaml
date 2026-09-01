@@ -30,10 +30,11 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v7.0.1
+      - uses: dart-lang/setup-dart@v1.8.1
         with:
           sdk: ${{ inputs.sdk }}
+          problem-matcher: false
 
       - working-directory: ${{ inputs.package-path }}
         run: dart pub get
@@ -50,10 +51,11 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.format-check}}
     steps:
-      - uses: actions/checkout@v6
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v7.0.1
+      - uses: dart-lang/setup-dart@v1.8.1
         with:
           sdk: ${{ inputs.sdk }}
+          problem-matcher: false
       
       # run pub get to resolve `analysis_options.yaml` dependencies (like 'workiva_analysis_options')
       # which might make configuration setting modifying format results
@@ -72,10 +74,11 @@ jobs:
   dependency-validator:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v7.0.1
+      - uses: dart-lang/setup-dart@v1.8.1
         with:
           sdk: ${{ inputs.sdk }}
+          problem-matcher: false
 
       - name: Install Dependency Validator
         run: dart pub global activate dependency_validator ^4.1.0
@@ -92,9 +95,9 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - id: should-skip
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9.0.0
         with:
           script: |
             const prAuthor = context.payload.pull_request.user.login;
@@ -170,10 +173,8 @@ jobs:
       matrix:
         check: ${{ fromJson(needs.analyze-additional-checks.outputs.checks) }}
     steps:
-      - uses: Workiva/gha-dart-oss/.github/actions/additional-checks@v0.1.14
+      - uses: $/.github/actions/additional-checks
         with:
           package-path: ${{ inputs.package-path }}
           command: ${{ matrix.check }}
           sdk: ${{ inputs.sdk }}
-
-
