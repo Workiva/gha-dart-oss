@@ -18,10 +18,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v6.1.0
+    - uses: actions/checkout@v7.0.1
     - uses: dart-lang/setup-dart@v1.8.1
       with:
         sdk: ${{ inputs.sdk }}
+        problem-matcher: false
 
     - name: Install Package Dependencies
       shell: bash
