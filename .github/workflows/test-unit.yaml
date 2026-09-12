@@ -99,6 +99,8 @@ jobs:
         working-directory: ${{ inputs.package-path }}
         if: needs.pre.outputs.dart-dev == 'true'
         run: |
+          echo "TESTS_RAN=true" >> $GITHUB_ENV
+
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
             args+=(--release)
@@ -119,6 +121,8 @@ jobs:
         working-directory: ${{ inputs.package-path }}
         if: needs.pre.outputs.dart-dev == 'false' && needs.pre.outputs.build-runner == 'true' && needs.pre.outputs.build-test == 'true'
         run: |
+          echo "TESTS_RAN=true" >> $GITHUB_ENV
+
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
             args+=(--release)
@@ -139,6 +143,8 @@ jobs:
         working-directory: ${{ inputs.package-path }}
         if: needs.pre.outputs.dart-dev == 'false' && needs.pre.outputs.build-runner == 'false' && needs.pre.outputs.build-test == 'false'
         run: |
+          echo "TESTS_RAN=true" >> $GITHUB_ENV
+
           args=()
           if [[ "${{ matrix.release-mode }}" == "true" ]]; then
             echo "::error:: release-mode is only supported with dart_dev or build_runner"
@@ -155,3 +161,31 @@ jobs:
 
           echo "timeout ${{ inputs.timeout }}m dart test "${args[@]}""
           timeout ${{ inputs.timeout }}m dart test "${args[@]}"
+
+      - name: Fallback - Run tests with dart test
+        working-directory: ${{ inputs.package-path }}
+        if: env.TESTS_RAN != 'true'
+        run: |
+          echo "TESTS_RAN=true" >> $GITHUB_ENV
+          echo "::warning:: No recognized test runner was detected (dart_dev, build_runner+build_test). Falling back to plain 'dart test'."
+
+          args=()
+          if [[ "${{ inputs.preset }}" != "" ]]; then
+            args+=(-P ${{ inputs.preset }})
+          fi
+
+          if [[ "${{ inputs.test-args }}" != "" ]]; then
+            args+=("${{ inputs.test-args }}")
+          fi
+
+          echo "timeout ${{ inputs.timeout }}m dart test "${args[@]}""
+          timeout ${{ inputs.timeout }}m dart test "${args[@]}"
+
+      - name: Verify tests ran
+        if: always()
+        run: |
+          if [[ "$TESTS_RAN" != "true" ]]; then
+            echo "::error:: No test steps were executed! Check your pubspec.yaml dependencies and workflow conditions."
+            exit 1
+          fi
+          echo "Tests ran successfully."
