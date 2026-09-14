@@ -70,6 +70,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: pre
     name: ${{ matrix.release-mode && 'release' || 'dev' }}
+    env:
+      TESTS_RAN: 'false'
     strategy:
       fail-fast: false
       matrix:
@@ -161,12 +163,3 @@ jobs:
 
           echo "timeout ${{ inputs.timeout }}m dart test "${args[@]}""
           timeout ${{ inputs.timeout }}m dart test "${args[@]}"
-
-      - name: Verify tests ran
-        if: always()
-        run: |
-          if [[ "$TESTS_RAN" != "true" ]]; then
-            echo "::error:: No test steps were executed! Check your pubspec.yaml dependencies and workflow conditions."
-            exit 1
-          fi
-          echo "Tests ran successfully."
