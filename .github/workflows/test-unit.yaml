@@ -78,7 +78,7 @@ jobs:
         release-mode: ${{ fromJson(needs.pre.outputs.chrome-platform == 'true' && '[true, false]' || '[false]') }}
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: dart-lang/setup-dart@v1.8.1
+      - uses: dart-lang/setup-dart@v1.8.2
         with:
           sdk: ${{ inputs.sdk }}
           problem-matcher: false
